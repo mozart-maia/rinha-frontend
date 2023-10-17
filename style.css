@@ -1,0 +1,39 @@
+#content, #result {
+    display: block;
+    margin: auto;
+    max-height: 500px;
+    max-width: 1300px;
+    align-content: center;
+    justify-self: center;
+}
+
+h1 {
+    font-size: 48px;
+    font-weight: 700;
+}
+
+
+#initial-text{
+    font-size: 24px;
+    font-weight: 400;
+}
+
+
+input[type="file"] {
+    display: none;
+}
+
+label, #home {
+    padding: 10px;
+    width: 200px;
+    background: rgb(228,228,228);
+    background: linear-gradient(90deg, rgba(228,228,228,1) 0%, rgba(247,247,247,1) 100%);
+    color: black;
+    text-transform: uppercase;
+    text-align: center;
+    display: block;
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 5px;
+
+}

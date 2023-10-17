@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta
+      charset="UTF-8"
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>JSON Tree Viewer</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body style="font-family: 'Inter', sans-serif">
+    <div id="content">
+      <h1>JSON Tree Viewer</h1>
+      <p>Simple JSON viewer that runs completely on-client. No data exchange</p>
+      <label for="json-input">Load JSON</label>
+      <input type="file" id="json-input" name="json-input" accept=".json" />
+    </div>
+    <div id="result">
+      <h2 id="file-name"></h2>
+      <button id="home" style="display: none">Home</button>
+      <p id="loading" style="display: none">Hold on. This can take a while.</p>
+      <p id="error" style="display: none; color: red">
+        Invalid file. Please load a valid JSON file.
+      </p>
+      <ul id="json-tree-viewer"></ul>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>
