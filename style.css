@@ -37,3 +37,14 @@ label, #home {
     border-radius: 5px;
 
 }
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+#json-tree-viewer::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  #json-tree-viewer {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }

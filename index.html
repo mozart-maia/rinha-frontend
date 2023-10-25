@@ -19,17 +19,31 @@
     <div id="content">
       <h1>JSON Tree Viewer</h1>
       <p>Simple JSON viewer that runs completely on-client. No data exchange</p>
-      <label for="json-input">Load JSON</label>
+      <label for="json-input" id="labelfile">Load JSON</label>
       <input type="file" id="json-input" name="json-input" accept=".json" />
     </div>
     <div id="result">
       <h2 id="file-name"></h2>
-      <button id="home" style="display: none">Home</button>
-      <p id="loading" style="display: none">Hold on. This can take a while.</p>
+      <button id="home" style="display: none">Reiniciar</button>
+      <p
+        id="loading"
+        style="display: none; color: chocolate; justify-self: center"
+      >
+        Hold on. This can take a while.
+      </p>
+      <img
+        id="loadingimg"
+        src="loading.gif"
+        style="display: none; width: 50%"
+      />
+
       <p id="error" style="display: none; color: red">
         Invalid file. Please load a valid JSON file.
       </p>
-      <ul id="json-tree-viewer"></ul>
+      <pre
+        id="json-tree-viewer"
+        style="overflow-x: scroll; font-size: 15px"
+      ></pre>
     </div>
     <script src="main.js"></script>
   </body>

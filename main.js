@@ -1,98 +1,102 @@
-let upload = document.getElementById("json-input");
+const upload = document.getElementById("json-input");
+const preEl = document.getElementById("json-tree-viewer");
+const loadingp = document.getElementById("loading");
+const loadingimg = document.getElementById("loadingimg");
+const btnhome = document.getElementById("home");
 
-// Abre ou cria um banco de dados chamado 'bancoJSON'
-let request = indexedDB.open("bancoJSON", 1);
+let indexScroll = 5;
+let contentToLoadonScroll;
+let intervalID;
+
+const reader = new FileReader();
+
+function loadItens() {
+  if (indexScroll < contentToLoadonScroll.length) {
+    if (indexScroll > contentToLoadonScroll.length - 100) {
+      for (let i = indexScroll; i < contentToLoadonScroll.length; i++) {
+        let someText = document.createTextNode(
+          contentToLoadonScroll[indexScroll + 1]
+        );
+        preEl.appendChild(someText);
+      }
+    } else {
+      for (let i = 0; i < 100; i++) {
+        let someText = document.createTextNode(
+          contentToLoadonScroll[indexScroll + i]
+        );
+        preEl.appendChild(someText);
+      }
+      indexScroll += 10;
+    }
+    let someText = document.createTextNode(contentToLoadonScroll[indexScroll]);
+    preEl.appendChild(someText);
+    indexScroll++;
+  } else {
+    clearInterval(intervalID);
+  }
+}
+
+function readFile(file) {
+  return new Promise((resolve, reject) => {
+    reader.onload = (event) => {
+      resolve(event.target.result);
+    };
+    reader.onerror = (event) => {
+      reject(event.target.error);
+    };
+    reader.readAsArrayBuffer(file);
+  });
+}
 
 if (upload) {
-  upload.addEventListener("change", function () {
+  upload.addEventListener("change", async function () {
+    // clearInterval(intervalID);
+    document.getElementById("json-tree-viewer").innerText = "";
+    btnhome.style.display = "block";
+    document.getElementById("labelfile").style.display = "none";
+    const comeco = new Date();
+    loadingp.style.display = "block";
+    loadingimg.style.display = "block";
     document.getElementById("home").addEventListener("click", function () {
       location.reload();
     });
 
     const file = upload.files[0];
-    if (file) {
-      const chunkSize = 1024 * 1024; // 1MB (tamanho da parte)
-      let offset = 0;
 
-      const listJson = document.getElementById("json-tree-viewer");
-      const splitFile = (file, offset, chunkSize) => {
-        const blob = file.slice(offset, offset + chunkSize);
-        const nreader = new FileReader();
+    console.log(file);
 
-        nreader.onload = function (e) {
-          const chunkData = e.target.result;
-          console.log(`Parte ${offset}-${offset + chunkSize - 1}:`);
-          // console.log(chunkData); // Aqui você pode processar ou armazenar a parte conforme necessário
-          const textDecoder = new TextDecoder("utf-8");
-          let text = textDecoder.decode(chunkData);
-          let lista = text.split("},{");
-          // console.log("{" + lista[0] + "}");
-          let li = document.createElement("li");
-          li.appendChild(document.createTextNode(text));
-          listJson.appendChild(li);
+    if (file.size > 10000000) {
+      let content = await readFile(file);
 
-          // request.onupgradeneeded = (event) => {
-          //   const db = event.target.result;
+      const textDecoder = new TextDecoder("utf-8");
+      let text = textDecoder.decode(content);
 
-          //   // Create another object store called "names" with the autoIncrement flag set as true.
-          //   const objStore = db.createObjectStore("jsonList", {
-          //     autoIncrement: true,
-          //   });
+      const re = new RegExp(/},/gm);
 
-          //   // Because the "names" object store has the key generator, the key for the name value is generated automatically.
-          //   // The added records would be like:
-          //   // key : 1 => value : "Bill"
-          //   // key : 2 => value : "Donna"
-          //   // customerData.forEach((customer) => {
-          //   objStore.add(text);
-          //   // });
-          //   console.log("DB:", objStore);
-          // };
+      const listText = text.split(re);
 
-          offset += chunkSize;
+      loadingp.style.display = "none";
+      loadingimg.style.display = "none";
 
-          if (offset < file.size) {
-            // Chama a próxima parte
-            splitFile(file, offset, chunkSize);
-          }
-        };
+      for (let i = 0; i < 5; i++) {
+        let someText = document.createTextNode(listText[i]);
+        preEl.appendChild(someText);
+      }
 
-        nreader.readAsArrayBuffer(blob);
-      };
+      contentToLoadonScroll = listText;
 
-      // Inicia o processo de divisão do arquivo
+      setInterval(loadItens, 4);
 
-      splitFile(file, offset, chunkSize);
+      const fim = new Date();
 
-      // document.getElementById("content").style.display = "none";
-      // document.getElementById("home").style.display = "block";
-      // document.getElementById("file-name").innerHTML = upload.files[0].name;
-      // document.getElementById("error").style.display = "none";
-      // document.getElementById("loading").style.display = "none";
-      // document.getElementById("json-tree-viewer").style.borderLeft =
-      //   "1px solid green";
-
-      // for (let c in chunks) {
-      //   console.log(c);
-      // }
+      console.log("Tempo:", (fim - comeco) / 1000);
     } else {
-      alert("Selecione um arquivo antes de dividir.");
+      loadingp.style.display = "none";
+      loadingimg.style.display = "none";
+      let content = await readFile(file);
+      const textDecoder = new TextDecoder("utf-8");
+      let text = textDecoder.decode(content);
+      document.getElementById("json-tree-viewer").innerText = text;
     }
   });
-}
-
-async function loadJSON(jsonData) {
-  if (upload.files[0].name === "giant.json") {
-    document.getElementById("json-tree-viewer").innerText = JSON.stringify(
-      jsonData,
-      null,
-      4
-    ).slice(0, 39164872);
-  } else {
-    document.getElementById("json-tree-viewer").innerText = JSON.stringify(
-      jsonData,
-      null,
-      4
-    );
-  }
 }
