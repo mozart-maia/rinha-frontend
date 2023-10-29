@@ -1,4 +1,4 @@
-const upload = document.getElementById("json-input");
+const jsoninput = document.getElementById("json-input");
 const preEl = document.getElementById("json-tree-viewer");
 const loadingp = document.getElementById("loading");
 const loadingimg = document.getElementById("loadingimg");
@@ -48,10 +48,10 @@ function readFile(file) {
   });
 }
 
-if (upload) {
-  upload.addEventListener("change", async function () {
+if (jsoninput) {
+  jsoninput.addEventListener("change", async function () {
     // clearInterval(intervalID);
-    document.getElementById("json-tree-viewer").innerText = "";
+    preEl.innerText = "";
     btnhome.style.display = "block";
     document.getElementById("labelfile").style.display = "none";
     const comeco = new Date();
@@ -61,19 +61,24 @@ if (upload) {
       location.reload();
     });
 
-    const file = upload.files[0];
+    const file = jsoninput.files[0];
 
     console.log(file);
 
-    if (file.size > 10000000) {
+    if (file.size > 30000000) {
       let content = await readFile(file);
 
       const textDecoder = new TextDecoder("utf-8");
       let text = textDecoder.decode(content);
 
       const re = new RegExp(/},/gm);
-
+      text = text.replace(re, "}, \n\t");
       const listText = text.split(re);
+
+      // const listText = [];
+      // for (let i = 0; i < text.length; i += 200001) {
+      //   listText.push(text.slice(i, i + 200000));
+      // }
 
       loadingp.style.display = "none";
       loadingimg.style.display = "none";
@@ -91,12 +96,12 @@ if (upload) {
 
       console.log("Tempo:", (fim - comeco) / 1000);
     } else {
-      loadingp.style.display = "none";
-      loadingimg.style.display = "none";
       let content = await readFile(file);
       const textDecoder = new TextDecoder("utf-8");
       let text = textDecoder.decode(content);
-      document.getElementById("json-tree-viewer").innerText = text;
+      preEl.innerText = text;
+      loadingp.style.display = "none";
+      loadingimg.style.display = "none";
     }
   });
 }

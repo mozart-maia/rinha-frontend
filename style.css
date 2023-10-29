@@ -23,6 +23,12 @@ input[type="file"] {
     display: none;
 }
 
+#json-tree-viewer{
+    border: 1px solid lightgreen;
+    border-radius: 15px;
+    padding: 1rem;
+}
+
 label, #home {
     padding: 10px;
     width: 200px;
